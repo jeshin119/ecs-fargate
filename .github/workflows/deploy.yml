@@ -89,7 +89,7 @@ jobs:
           # ECS Service 업데이트 (롤링 배포)
           echo "ECS Service 업데이트 시작..."
           aws ecs update-service \
-            --cluster music-app-cluster \
+            --cluster music-app-cluster3 \
             --service music-app-service \
             --task-definition "$NEW_TASK_DEF_ARN" \
             --force-new-deployment \
@@ -97,7 +97,7 @@ jobs:
           
           echo "배포 완료 대기 중... (최대 10분)"
           timeout 600 aws ecs wait services-stable \
-            --cluster music-app-cluster \
+            --cluster music-app-cluster3 \
             --services music-app-service || {
             echo "배포 타임아웃 - 수동으로 상태를 확인해주세요"
             exit 0
@@ -108,7 +108,7 @@ jobs:
           # 서비스 상태 확인
           echo "현재 서비스 상태:"
           aws ecs describe-services \
-            --cluster music-app-cluster \
+            --cluster music-app-cluster3 \
             --services music-app-service \
             --query 'services[0].[serviceName,status,runningCount,pendingCount,deployments[0].status]' \
             --output table
